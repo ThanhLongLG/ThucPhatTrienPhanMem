@@ -1,3 +1,5 @@
+<?php include 'app/views/shares/header.php'; ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -29,11 +31,14 @@
                         </div>
                         <?php endif; ?>
 
-                        <form method="POST" action="/TranThanhLong/Product/edit/<?php echo $product->getId(); ?>">
+                        <form method="POST" action="/TranThanhLong/Product/update" enctype="multipart/form-data"
+                        onsubmit="return validateForm();">
+                            <input type="hidden" name="id" value="<?php echo $product->id; ?>">
                             <div class="mb-3">
+                                
                                 <label for="name" class="form-label">Tên sản phẩm</label>
                                 <input type="text" class="form-control" id="name" name="name" 
-                                       value="<?php echo htmlspecialchars($product->getName(), ENT_QUOTES, 'UTF-8'); ?>" 
+                                       value="<?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>" 
                                        required 
                                        placeholder="Nhập tên sản phẩm">
                             </div>
@@ -42,14 +47,14 @@
                                 <label for="description" class="form-label">Mô tả</label>
                                 <textarea class="form-control" id="description" name="description" 
                                           required rows="3"
-                                          placeholder="Nhập mô tả chi tiết"><?php echo htmlspecialchars($product->getDescription(), ENT_QUOTES, 'UTF-8'); ?></textarea>
+                                          placeholder="Nhập mô tả chi tiết"><?php echo htmlspecialchars($product->description, ENT_QUOTES, 'UTF-8'); ?></textarea>
                             </div>
 
                             <div class="mb-4">
                                 <label for="price" class="form-label">Giá</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="price" name="price" 
-                                           value="<?php echo htmlspecialchars($product->getPrice(), ENT_QUOTES, 'UTF-8'); ?>"
+                                           value="<?php echo htmlspecialchars($product->Price, ENT_QUOTES, 'UTF-8'); ?>"
                                            required 
                                            step="0.01"
                                            placeholder="Nhập giá sản phẩm">
@@ -57,6 +62,34 @@
                                 </div>
                             </div>
 
+                            <div class="mb-4">
+                                <label for="category_id">Danh mục:</label>
+                                <select id="category_id" name="category_id" class="form-control" required>
+                                    <?php foreach ($categories as $category): ?>
+                                    <option value="<?php echo $category->id; ?>" <?php echo $category->id
+                                    == $product->category_id ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8');
+                                    ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>  
+                            </div>
+                                <div class="mb-4"><label for="image" class="form-label">Ảnh sản phẩm</label>
+                                <div class="mb-2">
+                                    <?php if (!empty($product->image)): ?>
+                                        <img src="/TranThanhLong/Product/displayImage/<?php echo $product->image; ?>" 
+                                            alt="Ảnh sản phẩm" 
+                                            class="img-thumbnail" 
+                                            style="max-width: 200px; max-height: 200px;">
+                                    <?php endif; ?>
+                                </div>
+                                <input type="file" 
+                                    class="form-control" 
+                                    id="image" 
+                                    name="image" 
+                                    accept="image/jpeg,image/png,image/gif">
+                                <small class="text-muted">Chỉ chấp nhận file ảnh (jpg, png, gif). Tối đa 5MB.</small>
+                            </div>
                             <div class="d-flex justify-content-end gap-2">
                                 <a href="/TranThanhLong/Product/list" class="btn btn-outline-secondary">
                                     <i class="fas fa-arrow-left"></i> Quay lại
@@ -76,3 +109,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<?php include 'app/views/shares/footer.php'; ?>
