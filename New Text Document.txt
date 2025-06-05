@@ -24,5 +24,18 @@ INSERT INTO category (name, description) VALUES
 ('Máy tính bảng', 'Danh mục các loại máy tính bảng'),
 ('Phụ kiện', 'Danh mục phụ kiện điện tử'),
 ('Thiết bị âm thanh', 'Danh mục loa, tai nghe, micro');mHostysqlmysql
-
-ALTER TABLE product ADD COLUMN image VARCHAR(255) DEFAULT NULL;
+CREATE TABLE orders ( 
+id INT AUTO_INCREMENT PRIMARY KEY, 
+name VARCHAR(255) NOT NULL, 
+phone VARCHAR(20) NOT NULL, 
+address TEXT NOT NULL, 
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+CREATE TABLE order_details ( 
+id INT AUTO_INCREMENT PRIMARY KEY, 
+order_id INT NOT NULL, 
+product_id INT NOT NULL, 
+quantity INT NOT NULL, 
+price DECIMAL(10, 2) NOT NULL, 
+FOREIGN KEY (order_id) REFERENCES orders(id) 
+);
