@@ -27,8 +27,7 @@
                 if (empty($username)) $errors['username'] = "Vui lòng nhập username!"; 
                 if (empty($fullName)) $errors['fullname'] = "Vui lòng nhập fullname!"; 
                 if (empty($password)) $errors['password'] = "Vui lòng nhập password!"; 
-                if ($password != $confirmPassword) $errors['confirmPass'] = "Mật khẩu và 
-                xác nhận chưa khớp!"; 
+                if ($password != $confirmPassword) $errors['confirmPass'] = "Mật khẩu và xác nhận chưa khớp!"; 
                 if (!in_array($role, ['admin', 'user'])) $role = 'user'; 
                 if ($this->accountModel->getAccountByUsername($username)) { 
                     $errors['account'] = "Tài khoản này đã được đăng ký!"; 

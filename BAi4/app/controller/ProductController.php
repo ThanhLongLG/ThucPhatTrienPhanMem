@@ -1,9 +1,10 @@
+
 <?php
 // Require SessionHelper and other necessary files
 require_once('app/config/database.php');
 require_once('app/models/ProductModel.php');
 require_once('app/models/CategoryModel.php');
-
+require_once('app/helpers/SessionHelper.php');
 class ProductController
 {
     private $productModel;
@@ -14,6 +15,14 @@ class ProductController
         $this->db = (new Database())->getConnection();
         $this->productModel = new ProductModel($this->db);
     }
+    private function isAdmin() {
+        return SessionHelper::isAdmin();
+    }
+    private function islogin() {
+        return SessionHelper::isLoggedIn();
+    }
+
+
 
     public function index()
     {
@@ -33,12 +42,20 @@ class ProductController
 
     public function add()
     {
+        if (!$this->isAdmin()) {
+            echo "Bạn không có quyền truy cập chức năng này!";
+            exit;
+        }
         $categories = (new CategoryModel($this->db))->getCategories();
         include_once 'app/views/product/add.php';
     }
 
     public function save()
     {
+        if (!$this->isAdmin()) {
+            echo "Bạn không có quyền truy cập chức năng này!";
+            exit;
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
@@ -69,6 +86,10 @@ class ProductController
 
     public function edit($id)
     {
+        if (!$this->isAdmin()) {
+            echo "Bạn không có quyền truy cập chức năng này!";
+            exit;
+        }
         $product = $this->productModel->getProductById($id);
         $categories = (new CategoryModel($this->db))->getCategories();
         
@@ -117,6 +138,10 @@ class ProductController
 
     public function delete($id)
     {
+        if (!$this->isAdmin()) {
+            echo "Bạn không có quyền truy cập chức năng này!";
+            exit;
+        }
         // Lấy thông tin ảnh trước khi xóa
         $image = $this->productModel->getProductImageById($id);
 
@@ -164,6 +189,10 @@ class ProductController
     }
     public function addToCart($id)
     {
+        if (!$this->islogin()) {
+            header('Location: /TranThanhLong/account/login');
+            exit;
+        }
         $product = $this->productModel->getProductById($id);
         if (!$product) {
             echo "Không tìm thấy sản phẩm.";
@@ -245,6 +274,39 @@ class ProductController
                 }
         }
     }
+    public function updateCart()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $product_id = $_POST['product_id'];
+            $new_quantity = (int)$_POST['quantity'];
+            
+            if (isset($_SESSION['cart'][$product_id]) && $new_quantity > 0) {
+                $_SESSION['cart'][$product_id]['quantity'] = $new_quantity;
+                
+                // Nếu là AJAX request, trả về JSON
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                    strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    $total = $this->calculateCartTotal();
+                    echo json_encode([
+                        'success' => true,
+                        'item_total' => number_format($_SESSION['cart'][$product_id]['price'] * $new_quantity, 0, ',', '.'),
+                        'grand_total' => number_format($total, 0, ',', '.')
+                    ]);
+                    exit;
+                }
+            }
+            
+            header('Location: /TranThanhLong/Product/cart');
+            exit();
+        }
+    }
+    private function calculateCartTotal()
+    {
+        return array_reduce($_SESSION['cart'], function($sum, $item) {
+            return $sum + ($item['price'] * $item['quantity']);
+        }, 0);
+    }
+    
     public function orderConfirmation()
     {
         include 'app/views/product/orderConfirmation.php';

@@ -8,6 +8,8 @@
     <title>Danh sách sản phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <style>
         .product-image {
             width: 100%;
@@ -28,9 +30,11 @@
     <div class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="display-6 text-primary">Danh sách sản phẩm</h1>
-            <a href="/TranThanhLong/Product/add" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Thêm sản phẩm mới
-            </a>
+            <?php if (SessionHelper::isAdmin()): ?>
+                <a href="/TranThanhLong/Product/add" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Thêm sản phẩm mới
+                </a>
+            <?php endif; ?>
         </div>
 
         <?php if (empty($products)): ?>
@@ -77,14 +81,17 @@
                             <a href="/TranThanhLong/Product/view/<?php echo $product->id; ?>" class="btn btn-info btn-sm">
                                 <i class="fas fa-eye"></i> Chi tiết
                             </a>
-                            <a href="/TranThanhLong/Product/edit/<?php echo $product->id; ?>" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit"></i> Sửa
-                            </a>
-                            <a href="/TranThanhLong/Product/delete/<?php echo $product->id; ?>" 
-                               class="btn btn-danger btn-sm" 
-                               onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                <i class="fas fa-trash"></i> Xóa
-                            </a>
+                            <?php if (SessionHelper::isAdmin()): ?>
+                                <a href="/TranThanhLong/Product/edit/<?php echo $product->id; ?>" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <a href="/TranThanhLong/Product/delete/<?php echo $product->id; ?>" 
+                                class="btn btn-danger btn-sm" 
+                                onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </a>
+                            <?php endif; ?>
+                            
                             <a href="/TranThanhLong/Product/addToCart/<?php echo $product->id; ?>"class="btn btn-primary btn-sm">Thêm vào giỏ hàng</a>
                             </li>
                         </div>
@@ -95,7 +102,8 @@
         </div>
         <?php endif; ?>
     </div>
-
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

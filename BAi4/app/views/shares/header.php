@@ -21,16 +21,19 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/TranThanhLong/Product/">Danh sách sản phẩm</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/TranThanhLong/Product/add">Thêm sản phẩm</a>
-                        </li>
+                        <?php if (SessionHelper::isAdmin()): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/TranThanhLong/Product/add">Thêm sản phẩm</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                     
                     <ul class="navbar-nav ml-auto">
                         <?php if(SessionHelper::isLoggedIn()): ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <?php echo htmlspecialchars($_SESSION['username']); ?>
+                                    <?php echo htmlspecialchars($_SESSION['username'])."(" . SessionHelper::getRole() . ")"; ?>
+                               
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">Hồ sơ</a>

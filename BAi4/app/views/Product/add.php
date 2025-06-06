@@ -139,7 +139,7 @@
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="/TranThanhLong/Product/list" class="btn btn-outline-secondary">
+                                <a href="/TranThanhLong/Product/Index" class="btn btn-outline-secondary">
                                     <i class="fas fa-arrow-left"></i> Quay lại
                                 </a>
                                 <button type="submit" class="btn btn-primary">
